@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>enchant</title>
+    <script type="text/javascript" src="enchant.js"></script>
+ <script type="text/javascript" src="ui.enchant.js"></script>
+
+<script>
+// 迴ｾ繧後ｋ繧ｯ繝槭ｒ縺ｲ縺溘☆繧峨け繝ｪ繝�け縺励※縺�￥繧ｲ繝ｼ繝ઍnchant();
+
+var TOUCH_ENABLED = (function() {
+    var div = document.createElement('div');
+    div.setAttribute('ontouchstart', 'return');
+    return typeof div.ontouchstart == 'function';
+})();
+
+window.onload = function() {
+    var removeCount = 0;
+    var gameEnd = false;
+    var score = 0;
+    var targets = [];
+    var width = 240;
+    var height = 240;
+
+    var game = new Game(width, height);
+    game.preload('bear.gif');
+
+    game.onload = function() {
+        var title = new Label();
+        title.x = 120;
+        title.y = 10;
+        title.text = '繧ｯ繝槭◆縺溘″繧ｲ繝ｼ繝㮧
+        title.font = "0.8em 'Arial'";
+        game.rootScene.addChild(title);
+
+        var pointLabel = new Label();
+        pointLabel.x = 10;
+        pointLabel.y = 10;
+        pointLabel.text = 'Score: ' + score;
+        pointLabel.font = "0.8em 'Arial'";
+        game.rootScene.addChild(pointLabel);
+
+        for (var i = 0; i < 100; i++) {
+            var target = new Sprite(20, 30);
+            target.image = game.assets['bear.gif'];
+            target.x = Math.floor(Math.random() * width);
+            if (target.x > width - 20) {
+                target.x = width - 20;
+            }
+            target.y = Math.floor(Math.random() * height);
+            if (target.y > height - 30) {
+                target.y = height - 30;
+            }
+            target.visible = false;
+            target.buttonMode = true;
+            target.addEventListener('enterframe', function() {
+                if (this.buttonPressed && !gameEnd) {
+                    removeCount++;
+                    score = score + (100 - 10 * (visibleCount - removeCount));
+                    pointLabel.text = 'Score: ' + score;
+                    game.rootScene.removeChild(this);
+                }
+            });
+            targets.push(target);
+            game.rootScene.addChild(target);
+        }
+
+        var interval = TOUCH_ENABLED ? 300 : 500;
+        var visibleCount = 0;
+        var timer = window.setInterval(function() {
+            targets[visibleCount].visible = true;
+            visibleCount++;
+        }, interval);
+
+        game.addEventListener('enterframe', function() {
+            if (visibleCount - removeCount >= 10) {
+                window.clearInterval(timer);
+                gameEnd = true;
+            }
+        });
+    }
+    game.start();
+}
+</script>
+
+  </head>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<script>
+var mybutton=function(name_,x_,y_){
+  this.name = name_;
+  this.x = x_;
+  this.y = y_;
+  this.radius = 10;
+  this.time = 0; 
+  this.on_click = function(){
+    console.log(this.name);
+	window.location.href = "反射神経マスター.html";　//on_click実行時ページ遷移
+  };
+  this.on_update = function(){
+    this.time += 500;
+    this. x += 10 * Math.sin(this.time / 1000);
+  };
+  this.on_draw = function(){
+    context.beginPath();
+    context.arc(this.x,this.y,this.radius,0,2*Math.PI,false);
+    context.stroke();
+  };
+};
+
+var os = [
+  new mybutton("one",10,10),
+  new mybutton("two",40,40),
+];
+
+var context = null;
+
+var update = function(){
+  for(var i in os)
+    os[i].on_update();
+};
+
+var draw = function(){
+  context.clearRect(0,0,500,500);
+  for(var i in os)
+    os[i].on_draw();
+};
+
+var update_and_draw = function(){
+  update();
+  draw();
+};
+
+var click = function(e){
+  //document.getElementById("ccc").innerHTML=e.layerX;
+  var x = e.layerX;
+  var y = e.layerY;
+  for(var i in os){
+    var o = os[i];
+    var dx = x - o.x;
+    var dy = y - o.y;
+    var d = Math.sqrt(dx*dx+dy*dy);
+    if(d <= o.radius)
+      o.on_click();
+  }
+};
+
+window.addEventListener("load",function(){ //loadをよびだす
+  var ddd = document.getElementById("ddd");	 //ddd宣言　documentからelement取得
+  ddd.addEventListener("click",click);		 //クリック
+  context = ddd.getContext("2d");			 //"2d"で表示
+  setInterval(update_and_draw,30);			 //30ミリ秒更新
+});
+</script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>無題ドキュメント</title>
+</head>
+
+<body>
+<canvas id="ddd" width="500" height="500" style="border:solid 1px #F39">
+</canvas>
+<div id="ccc">
+</div>
+</body>
+</html>

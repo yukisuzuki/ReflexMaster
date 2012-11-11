@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>enchant</title>
+    <script type="text/javascript" src="enchant.js"></script>
+ <script type="text/javascript" src="ui.enchant.js"></script>
+
+<script>
+enchant();
+var TOUCH_ENABLED = (function() {
+    var div = document.createElement('div');
+    div.setAttribute('ontouchstart', 'return');
+    return typeof div.ontouchstart == 'function';})();
+
+window.onload = function() {
+    var removeCount = 0;
+	var visibleCount = 0;
+    var gameEnd = false;
+    var score = 0;
+    var targets = [];
+    var width = 100;
+    var height = 100;
+	var flg = 1;
+	var cnt = 0;
+    var game = new Game(680,480);
+    game.preload('migi.gif','hidari.gif','ue.gif',"sita.gif","End.jpg");
+
+    game.onload = function() {
+        var pointLabel = new Label();　　　//スコア
+        pointLabel.x = 10;
+        pointLabel.y = 10;
+        pointLabel.text = 'Score: ' + score;
+        pointLabel.font = "0.8em 'Arial'";
+        game.rootScene.addChild(pointLabel);
+		var pointLabelTime = new Label();//タイム
+        pointLabelTime.x = 10;
+        pointLabelTime.y = 30;
+        pointLabelTime.text = 'Time: ' +  visibleCount;
+        pointLabelTime.font = "0.8em 'Arial'";
+        game.rootScene.addChild(pointLabelTime);
+		var pointLabelLast = new Label();//残り
+        pointLabelLast.x = 10;
+        pointLabelLast.y = 50;
+        pointLabelLast.text = 'Last: ' +  (100 - cnt);
+        pointLabelLast.font = "0.8em 'Arial'";
+        game.rootScene.addChild(pointLabelLast);
+
+
+
+     
+           var target = new Sprite(100, 100);
+           var target2 = new Sprite(400, 249);
+		
+		
+		right();
+		
+		function change(){
+			var a = rand();
+		switch(a){
+			case 1: right(); break;
+			case 2: left();  break;
+			case 3: up();    break;
+			case 4: down();  break;
+			}
+		}
+		
+		   
+		   function right(){
+			flg = 1;
+            target.image = game.assets['migi.gif'];
+            target.x= 150;
+            target.y= 150;
+		    game.rootScene.addChild(target);
+		   }
+		    function left(){
+			flg = 2;
+            target.image = game.assets['hidari.gif'];
+            target.x= 150;
+            target.y= 150;
+		    game.rootScene.addChild(target);
+		   }
+		   function up(){
+			flg = 3;
+            target.image = game.assets['ue.gif'];
+            target.x= 150;
+            target.y= 150;
+		    game.rootScene.addChild(target);
+		   }
+		   function down(){
+			flg = 4;
+            target.image = game.assets['sita.gif'];
+            target.x= 150;
+            target.y= 150;
+		    game.rootScene.addChild(target);
+			
+		   }
+ 
+ 
+
+            
+            target.addEventListener('enterframe', function() {   //右キーの確認
+                if (game.input.right && flg ==1) {
+                    removeCount++;
+                    score = score + (100 - 10 * (visibleCount - removeCount));
+                    pointLabel.text = 'Score: ' + score;
+					pointLabelLast.text = 'Last: ' +  (100 - removeCount);
+                    game.rootScene.removeChild(this);
+					change();
+                }
+            });
+            target.addEventListener('enterframe', function() {   //左キーの確認
+                if (game.input.left && flg ==2) {
+                    removeCount++;
+                    score = score + (100 - 10 * (visibleCount - removeCount));
+                    pointLabel.text = 'Score: ' + score;
+					pointLabelLast.text = 'Last: ' +  (100 - removeCount);
+                    game.rootScene.removeChild(this);
+					change();
+                }
+            });
+            target.addEventListener('enterframe', function() {   //上キーの確認
+                if (game.input.up && flg ==3) {
+                    removeCount++;
+                    score = score + (100 - 10 * (visibleCount - removeCount));
+                    pointLabel.text = 'Score: ' + score;
+					pointLabelLast.text = 'Last: ' +  (100 - removeCount);
+                    game.rootScene.removeChild(this);
+					change();
+                }
+            });
+            target.addEventListener('enterframe', function() {   //下キーの確認
+                if (game.input.down && flg ==4) {
+                    removeCount++;
+                    score = score + (100 - 10 * (visibleCount - removeCount));
+                    pointLabel.text = 'Score: ' + score;
+					pointLabelLast.text = 'Last: ' +  (100 - removeCount);
+                    game.rootScene.removeChild(this);
+					change();
+                }
+            });
+ 
+    
+	        
+
+
+        var interval = TOUCH_ENABLED ? 300 : 500;
+        var timer = window.setInterval(function() {
+            target[visibleCount];
+            visibleCount++;
+			pointLabelTime.text = 'Time: ' +  visibleCount;
+        }, interval);
+
+        game.addEventListener('enterframe', function() {
+            if (removeCount > 99) {
+                window.clearInterval(timer);
+                gameEnd = true;
+				target2.image = game.assets['End.jpg'];
+            	target2.x= 0;
+            	target2.y= 80;
+		    	game.rootScene.addChild(target2);
+				flg = 5;
+				
+            }
+        });
+    }
+	function rand(){			//ランダム
+	return Math.floor(Math.random() * 4) + 1;
+	}
+ game.start();
+}
+</script>
+
+  </head>
+<body>
+    <div id="enchant-stage">
+    </div>
+ 
+    <!-- ↓任意のhtml -->
+ 
+</body>
+
+</html>

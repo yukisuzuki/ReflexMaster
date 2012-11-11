@@ -1,0 +1,26 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<script>
+ var ddd = function(e){
+	document.getElementById("ccc").innerHTML="X" +e.layerX;
+	document.getElementById("bbb").innerHTML="Y" +e.layerY;
+	};
+window.addEventListener("load",function(){ 
+	document.getElementById("ddd").addEventListener("click",ddd);
+	}); 
+</script>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>無題ドキュメント</title>
+</head>
+
+<body>
+<canvas id="ddd" width="500" height="500" style="border:solid 1px #F39">
+</canvas>
+<div id="ccc">
+</div>
+<div id="bbb">
+</div>
+</body>
+</html>

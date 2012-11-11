@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>enchant</title>
+    <script type="text/javascript" src="enchant.js"></script>
+ <script type="text/javascript" src="ui.enchant.js"></script>
+
+<script>
+// 
+enchant();
+var TOUCH_ENABLED = (function() {
+    var div = document.createElement('div'); div.setAttribute('ontouchstart', 'return');return typeof div.ontouchstart == 'function';})();
+
+window.onload = function() {
+    var removeCount = 0;
+    var gameEnd = false;
+    var score = 0;
+    var targets = [];
+    var width = 240;
+    var height = 240;
+
+    var game = new Game(400,400);
+
+
+	var RX=[20,110,220];
+	var RY=[0,100,200];
+    game.preload('bear.gif');
+
+    game.onload = function() {
+        var title = new Label();
+      /*  title.x = 120;
+        title.y = 10;
+        title.text = "aaaa";
+        title.font = "0.8em 'Arial'";
+*/        
+//game.rootScene.addChild(title);
+        var pointLabel = new Label();
+        pointLabel.x = 10;
+        pointLabel.y = 10;
+        pointLabel.text = 'Score: ' + score;
+        pointLabel.font = "0.8em 'Arial'";
+        game.rootScene.addChild(pointLabel);
+
+var count = 0;
+        for (var i = 0 ,i2 = 0; i < 3; i2++) {
+            var target = new Sprite(20, 30);
+            target.image = game.assets['bear.gif'];
+            target.x = Math.floor(RX[i2]);
+	    target.y = Math.floor(RY[i]);
+	
+//if()           
+
+           
+     
+           }
+
+
+	    target.visible = false;
+            target.buttonMode = true;
+            target.addEventListener('enterframe', function() {
+                if (this.buttonPressed && !gameEnd) {
+                    removeCount++;
+                    score = score + (100 - 10 * (visibleCount - removeCount));
+                    pointLabel.text = 'Score: ' + score;
+                    game.rootScene.removeChild(this);
+                }
+            });
+            targets.push(target);
+            game.rootScene.addChild(target);
+        }
+
+        var interval = TOUCH_ENABLED ? 300 : 500;
+        var visibleCount = 0;
+        var timer = window.setInterval(function() {
+            targets[visibleCount].visible = true;
+            visibleCount++;
+        }, interval);
+
+        game.addEventListener('enterframe', function() {
+            if (visibleCount - removeCount >= 10) {
+                window.clearInterval(timer);
+                gameEnd = true;
+            }
+        });
+    }
+    game.start();
+}
+</script>
+
+  </head>
+</html>
